@@ -1,14 +1,13 @@
 package com.blog.application.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -24,4 +23,7 @@ public class User {
 	private String email;
 	private String password;
 	private String about;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Post> posts = new ArrayList<>();
 }
