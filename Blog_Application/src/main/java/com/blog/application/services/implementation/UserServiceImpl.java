@@ -3,9 +3,12 @@ package com.blog.application.services.implementation;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.blog.application.config.AppConstants;
+import com.blog.application.entities.Role;
+import com.blog.application.repositories.RoleRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.blog.application.entities.User;
@@ -16,12 +19,33 @@ import com.blog.application.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
-	@Autowired
-	UserRepo UserRepo;
 
 	@Autowired
-	ModelMapper modelMapper;
+	private UserRepo UserRepo;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private RoleRepo roleRepo;
+
+	@Override
+	public UserDto registerUser(UserDto userDto) {
+		User user = this.modelMapper.map(userDto, User.class);
+
+		//Encode Password
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+		//Roles
+		Role role = this.roleRepo.findById(AppConstants.ADMIN_USER_ROLE_ID).get();
+		user.getRoles().add(role);
+
+		User newUser = UserRepo.save(user);
+		return this.modelMapper.map(newUser, UserDto.class);
+	}
 
 	@Override
 	public UserDto createUser(UserDto userDto) {

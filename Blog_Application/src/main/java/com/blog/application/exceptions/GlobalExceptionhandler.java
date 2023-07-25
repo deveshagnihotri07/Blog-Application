@@ -34,4 +34,11 @@ public class GlobalExceptionhandler {
 
 		return new ResponseEntity<Map<String, String>>(response, HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler(BadCredsException.class)
+	public ResponseEntity<ApiResponse> badCredsExceptionHandler(BadCredsException ex){
+		String messageString = ex.getMessage();
+		ApiResponse apiResponse = new ApiResponse(messageString, false);
+		return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.BAD_REQUEST);
+	}
 }

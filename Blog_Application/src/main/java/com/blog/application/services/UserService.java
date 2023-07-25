@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.blog.application.payloads.UserDto;
 
 public interface UserService {
-	
+
+	UserDto registerUser(UserDto user);
 	UserDto createUser(UserDto user);
 	
 	UserDto updateUser(UserDto user, Integer id);
